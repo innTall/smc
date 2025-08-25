@@ -1,0 +1,25 @@
+{
+	"exchange": "bingx",
+	"symbols": [
+		"BTCUSDT",
+		"ETHUSDT",
+		"BNBUSDT"
+	],
+	"intervals": [
+		"15m",
+		"1h"
+	],
+	"history_limit": 200,
+	"fractal_window": 5,
+	"price_epsilon": 5,
+	"telegram": {
+		"enabled": true,
+		"debug_signals": false
+	},
+	"logging": {
+		"level": "DEBUG"
+	},
+	"id": "BTCUSDT_15m",
+	"reqType": "sub",
+	"dataType": "BTC-USDT@kline_15m"
+}
