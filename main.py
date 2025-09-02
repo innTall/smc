@@ -14,6 +14,11 @@ def main():
     config = load_config()
     logger = setup_logger(config["logging"]["level"])
 
+    if config.get("source") == "api":
+        raise RuntimeError(
+            "[FATAL] Production bot cannot use API candles! Set source='ws' in config.json"
+        )
+
     telegram = TelegramClient(config)
     engine = SignalEngine(config, telegram)
 
