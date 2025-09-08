@@ -14,6 +14,9 @@
 	"logging": {
 		"level": "DEBUG"
 	},
+	"timezone": "Europe/Madrid",
+	"send_last_confirmed": true,
+	"print_last_candles": false,
 	"id": "BTCUSDT_15m",
 	"reqType": "sub",
 	"dataType": "BTC-USDT@kline_15m"

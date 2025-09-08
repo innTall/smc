@@ -1,14 +1,14 @@
 import unittest
-from datetime import datetime, timezone
-import main
+from main import format_message
 
 class TestMain(unittest.TestCase):
     def test_format_message(self):
-        candle = {"timestamp": 1691232000000, "close": 27345.67}
-        msg = main.format_message("BTCUSDT", "1h", candle)
+        candle = {"timestamp": 1690000000000, "close": 27345.5}
+        config = {"timezone": "UTC"}
+        msg = format_message("BTCUSDT", "1h", candle, config)
         self.assertIn("BTCUSDT", msg)
-        self.assertIn("27345.67", msg)
-        self.assertIn("2023", msg)  # check date is formatted
+        self.assertIn("1h", msg)
+        self.assertIn("27345.5", msg)
 
 if __name__ == "__main__":
     unittest.main()

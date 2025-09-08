@@ -1,10 +1,8 @@
 import json
 import logging
-from datetime import datetime, timezone
-
 from utils.rest_api import get_last_confirmed_candle, get_last_candles
 from core.telegram_bot import send_signal
-
+from core.signal_engine import format_message
 
 def setup_logger(config: dict):
     level_str = config.get("logging", {}).get("level", "INFO").upper()
@@ -16,17 +14,6 @@ def setup_logger(config: dict):
     )
     return logging.getLogger("smc")
 
-
-def format_message(symbol: str, interval: str, candle: dict) -> str:
-    ts = datetime.fromtimestamp(candle["timestamp"] / 1000, tz=timezone.utc)
-    return (
-        f"Symbol: {symbol}\n"
-        f"Interval: {interval}\n"
-        f"Last confirmed Close: {candle['close']}\n"
-        f"Timestamp: {ts.strftime('%Y-%m-%d %H:%M UTC')}"
-    )
-
-
 def main():
     with open("config.json") as f:
         config = json.load(f)
@@ -34,22 +21,29 @@ def main():
     logger = setup_logger(config)
     logger.info("Starting bot...")
 
-    for symbol in config["symbols"]:
-        for interval in config["intervals"]:
-            try:
-                candle = get_last_confirmed_candle(symbol, interval)
-                message = format_message(symbol, interval, candle)
-                logger.debug(f"Sending signal: {message}")
-                send_signal(message)
-            except Exception as e:
-                logger.error(f"Failed for {symbol}-{interval}: {e}")
+    # Step 1: (Optional) Send last confirmed candles to Telegram
+    if config.get("send_last_confirmed", False):
+        for symbol in config["symbols"]:
+            for interval in config["intervals"]:
+                try:
+                    candle = get_last_confirmed_candle(symbol, interval)
+                    message = format_message(symbol, interval, candle, config)
+                    logger.debug(f"Sending signal: {message}")
+                    send_signal(message)
+                except Exception as e:
+                    logger.error(f"Failed for {symbol}-{interval}: {e}")
 
-    # Example: fetch last 10 candles BTCUSDT, 1h
-    candles = get_last_candles("BTCUSDT", "1h", limit=10)
-    logger.debug("Fetched last 10 BTCUSDT 1h candles")
-    for c in candles:
-        logger.debug(c)
-
+    # Step 2: (Optional) Print last 10 candles to terminal
+    if config.get("print_last_candles", False):
+        for symbol in config["symbols"]:
+            for interval in config["intervals"]:
+                try:
+                    candles = get_last_candles(symbol, interval, limit=10)
+                    logger.debug(f"Fetched last 10 {symbol} {interval} candles")
+                    for c in candles:
+                        logger.debug(c)
+                except Exception as e:
+                    logger.warning(f"Could not fetch history for {symbol}-{interval}: {e}")
 
 if __name__ == "__main__":
     main()
