@@ -1,10 +1,13 @@
 import json
 import logging
-from utils.rest_api import get_last_confirmed_candle, get_last_candles
+from utils.rest_api import get_last_confirmed_candle
 from core.telegram_bot import send_signal
 from core.signal_engine import format_message
+from modules.fractals import FractalDetector
+from modules.fractal_break import FractalBreakManager
 
 def setup_logger(config: dict):
+    """Setup application logger from config.json."""
     level_str = config.get("logging", {}).get("level", "INFO").upper()
     level = getattr(logging, level_str, logging.INFO)
     logging.basicConfig(
@@ -33,17 +36,23 @@ def main():
                 except Exception as e:
                     logger.error(f"Failed for {symbol}-{interval}: {e}")
 
-    # Step 2: (Optional) Print last 10 candles to terminal
-    if config.get("print_last_candles", False):
+    # Step 2: (Optional) Detect fractals and print normal ones
+    if config.get("print_normal_fractals", False):
+        detector = FractalDetector(config)
+        detector.fetch_history()
+        detector.detect_fractals()
+
+        break_mgr = FractalBreakManager(config)
+        break_mgr.process_all(detector.fractals, detector.history)
+        
+        # ✅ Loop over all symbols and intervals
         for symbol in config["symbols"]:
             for interval in config["intervals"]:
-                try:
-                    candles = get_last_candles(symbol, interval, limit=10)
-                    logger.debug(f"Fetched last 10 {symbol} {interval} candles")
-                    for c in candles:
-                        logger.debug(c)
-                except Exception as e:
-                    logger.warning(f"Could not fetch history for {symbol}-{interval}: {e}")
+                normals = break_mgr.format_normal_fractals(symbol, interval, detector.tz)
+                if normals:
+                    print(f"\n=== {symbol} --- {interval} ===")
+                    for f in normals:
+                        print(f)
 
 if __name__ == "__main__":
     main()
