@@ -15,6 +15,11 @@ def setup_logger(config: dict):
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
+
+    # Silence urllib3 unless explicitly enabled
+    if not config.get("debug_requests", False):
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
+
     return logging.getLogger("smc")
 
 def main():
@@ -25,7 +30,7 @@ def main():
     logger.info("Starting bot...")
 
     # Step 1: (Optional) Send last confirmed candles to Telegram
-    if config.get("send_last_confirmed", False):
+    if config["send_last_confirmed"]:
         for symbol in config["symbols"]:
             for interval in config["intervals"]:
                 try:
@@ -37,7 +42,7 @@ def main():
                     logger.error(f"Failed for {symbol}-{interval}: {e}")
 
     # Step 2: (Optional) Detect fractals and print normal ones
-    if config.get("print_normal_fractals", False):
+    if config["print_normal_fractals"]:
         detector = FractalDetector(config)
         detector.fetch_history()
         detector.detect_fractals()

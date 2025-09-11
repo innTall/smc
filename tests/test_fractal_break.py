@@ -6,7 +6,7 @@ candles = [
     {"time": 2, "open": 106, "high": 115, "low": 104, "close": 110},
     {"time": 3, "open": 111, "high": 120, "low": 109, "close": 115},  # center
     {"time": 4, "open": 114, "high": 118, "low": 112, "close": 116},
-    {"time": 5, "open": 117, "high": 121, "low": 115, "close": 121},  # breakout
+    {"time": 5, "open": 117, "high": 119, "low": 115, "close": 121},  # breakout
 ]
 
 window = 3
