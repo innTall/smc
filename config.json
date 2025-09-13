@@ -1,25 +1,8 @@
 {
 	"exchange": "bingx",
-	"symbols": ["BTCUSDT"],
-	"intervals": ["4h", "1h", "15m"],
+	"symbols": ["BTC-USDT"],
+	"intervals": ["1h", "15m"],
 	"history_limit": 100,
-	"fractal_window": 7,
-	"price_epsilon": 0.0001,
-	"source": "api",
-	"logging": {
-		"level": "DEBUG"
-	},
-	"telegram": {
-		"enabled": false,
-		"debug_signals": false
-	},
-	"debug_requests": false,
-	"fractal_debug": false,
-	"print_breakouts": false,
-	"send_last_confirmed": false,
-	"print_normal_fractals": true,
-	"timezone": "Europe/Madrid",
-	"id": "BTCUSDT_15m",
-	"reqType": "sub",
-	"dataType": "BTC-USDT@kline_15m"
+	"last_values": 5,
+	"timezone": "Europe/Madrid"
 }

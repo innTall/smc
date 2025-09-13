@@ -12,7 +12,8 @@ venv/
 # IDEs
 .vscode/
 .idea/
-archive
+*.swp
+*.swo
 
 # System files
 .DS_Store
@@ -20,6 +21,7 @@ Thumbs.db
 
 # Secrets
 .env
+.env.*
 *.key
 *.pem
 *.crt
@@ -27,3 +29,9 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Unit test / coverage reports
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
