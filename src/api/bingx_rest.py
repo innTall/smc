@@ -5,12 +5,12 @@ from hashlib import sha256
 from typing import List, Optional
 
 from src.types.models import Candle
-from src.utils.timeutils import unix_to_local, now_ms
+from src.utils.timeutils import unix_to_local, now_ms, to_datetime
 
 APIURL = "https://open-api.bingx.com"
 
 class BingXRestClient:
-    def __init__(self, api_key: str, secret_key: str, timezone: str = "UTC"):
+    def __init__(self, api_key: str = "", secret_key: str = "", timezone: str = "UTC"):
         self.api_key = api_key
         self.secret_key = secret_key
         self.timezone = timezone
@@ -80,7 +80,7 @@ class BingXRestClient:
                     low=float(item["low"]),
                     close=float(item["close"]),
                     volume=float(item["volume"]),
-                    time=unix_to_local(int(item["time"]), self.timezone),
+                    time=to_datetime(int(item["time"])),
                 )
             )
 

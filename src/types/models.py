@@ -10,4 +10,12 @@ class Candle:
     low: float
     close: float
     volume: float
-    time: datetime  # localized datetime
+    time: datetime
+
+@dataclass
+class Fractal:
+    symbol: str
+    interval: str
+    time: datetime      # time of the central candle
+    type: str           # "HFractal" or "LFractal"
+    level: float        # high (HFractal) or low (LFractal) # localized datetime

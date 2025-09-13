@@ -2,7 +2,9 @@
 	"exchange": "bingx",
 	"symbols": ["BTC-USDT"],
 	"intervals": ["1h", "15m"],
+	"fractal_window": 5,
 	"history_limit": 100,
 	"last_values": 5,
-	"timezone": "Europe/Madrid"
+	"timezone": "Europe/Madrid",
+	"datetime_format": "%d.%m.%Y %H:%M"
 }
